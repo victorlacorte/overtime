@@ -5,8 +5,15 @@ import sys
 
 def toHoursMinutes(seconds):
     seconds = int(seconds)
-    m, _ = divmod(seconds, 60)
-    h, m = divmod(m, 60)
+    negative = False
+    if seconds < 0:
+        # Avoid floor errors with negative amounts
+        negative = True
+        seconds = -seconds
+    m = seconds // 60
+    h, m = m // 60, m % 60
+    if negative:
+        return '-%0d:%02d' % (h, m)
     return '%0d:%02d' % (h, m)
 
 def planning(hours, minutes, days):
@@ -22,12 +29,10 @@ def timebank(times):
     '''times: array of strings in the HH:mm format'''
     def toSeconds(t):
         h, m = t.split(':')
-        if '-' in h:
-            h, m = map(int, (h, m))
-            if h == 0:
-                return -m*60
-            return h*3600 - m*60
+        negative = True if '-' in h else False
         h, m = map(int, (h, m))
+        if negative:
+            return h*3600 - m*60
         return h*3600 + m*60
 
     seconds = [toSeconds(t) for t in times]
