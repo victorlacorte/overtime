@@ -26,7 +26,7 @@ def planning(hours, minutes, days):
     return datetime.timedelta(seconds=seconds)
 
 def timebank(times):
-    '''times: array of strings in the HH:mm format'''
+    '''times: array of strings in HH:mm format'''
     def toSeconds(t):
         h, m = t.split(':')
         negative = True if '-' in h else False
