@@ -1,5 +1,6 @@
 from functools import reduce
 import datetime
+import math
 import sys
 
 
@@ -10,7 +11,8 @@ def toHoursMinutes(seconds):
         # Avoid floor errors with negative amounts
         negative = True
         seconds = -seconds
-    m = seconds // 60
+    # Rounding up seems safer than performing a simple integer division
+    m = math.ceil(seconds / 60)
     h, m = m // 60, m % 60
     if negative:
         return '-%0d:%02d' % (h, m)
@@ -23,7 +25,7 @@ def planning(hours, minutes, days):
     '''
     hours, minutes, days = int(hours), int(minutes), int(days)
     seconds = (hours*3600 + minutes*60) / days
-    return datetime.timedelta(seconds=seconds)
+    return toHoursMinutes(seconds)
 
 def timebank(times):
     '''times: array of strings in HH:mm format'''
