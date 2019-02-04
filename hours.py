@@ -4,6 +4,14 @@ import math
 import sys
 
 
+def toSeconds(t):
+    h, m = t.split(':')
+    negative = True if '-' in h else False
+    h, m = map(int, (h, m))
+    if negative:
+        return h*3600 - m*60
+    return h*3600 + m*60
+
 def toHoursMinutes(seconds):
     seconds = int(seconds)
     negative = False
@@ -29,16 +37,18 @@ def planning(hours, minutes, days):
 
 def timebank(times):
     '''times: array of strings in HH:mm format'''
-    def toSeconds(t):
-        h, m = t.split(':')
-        negative = True if '-' in h else False
-        h, m = map(int, (h, m))
-        if negative:
-            return h*3600 - m*60
-        return h*3600 + m*60
 
     seconds = [toSeconds(t) for t in times]
     return reduce(lambda x, y: x + y, seconds)
+
+def worktime(times, goal='8:00', lunch='1:00'):
+    assert len(times) % 2 == 0, 'Need an even amount of timestamps'
+
+    signals = [1, -1] * len(times)
+    total = 0
+    for s, t in zip(signals, map(toSeconds, reversed(times))):
+        total += s * t
+    return toHoursMinutes(total)
 
 
 if __name__ == '__main__':

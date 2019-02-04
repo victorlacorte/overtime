@@ -1,6 +1,6 @@
 import pytest
 
-from hours import timebank, toHoursMinutes
+from hours import timebank, toHoursMinutes, worktime
 
 
 @pytest.mark.parametrize('times, expected', [
@@ -42,3 +42,11 @@ def test_toHoursMinutes(time, expected):
 ])
 def test_myTimebank(times, expected):
     assert toHoursMinutes(timebank(times)) == expected
+
+@pytest.mark.parametrize('times, expected', [
+    (('8:00', '12:00', '13:00', '17:00'), '8:00'),
+    (('8:00', '12:00', '13:00', '16:00'), '7:00'),
+    (('8:06', '11:45', '13:36', '17:57'), '8:00'),
+])
+def test_worktime(times, expected):
+    assert worktime(times) == expected
