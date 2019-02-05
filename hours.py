@@ -42,11 +42,14 @@ def timebank(times):
     return reduce(lambda x, y: x + y, seconds)
 
 def worktime(times, goal='8:00', lunch='1:00'):
-    assert len(times) % 2 == 0, 'Need an even amount of timestamps'
+    '''Goal and luch (amounts) are just an idea'''
 
-    signals = [1, -1] * len(times)
+    assert len(times) % 2 == 0,
+    f'Need an even amount of timestamps, got {len(times)}'
+
+    signals = [-1, 1] * len(times)
     total = 0
-    for s, t in zip(signals, map(toSeconds, reversed(times))):
+    for s, t in zip(signals, map(toSeconds, times)):
         total += s * t
     return toHoursMinutes(total)
 
