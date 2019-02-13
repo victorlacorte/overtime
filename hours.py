@@ -44,8 +44,8 @@ def timebank(times):
 def worktime(times, goal='8:00', lunch='1:00'):
     '''Goal and luch (amounts) are just an idea'''
 
-    assert len(times) % 2 == 0,
-    f'Need an even amount of timestamps, got {len(times)}'
+    assert len(times) % 2 == 0, f'Need an even amount of timestamps, got' \
+            ' {len(times)}'
 
     signals = [-1, 1] * len(times)
     total = 0
