@@ -44,16 +44,34 @@ def timebank(times):
     return reduce(lambda x, y: x + y, seconds)
 
 
-def worktime(times, goal='8:00', lunch='1:00'):
-    '''Goal and luch (amounts) are just an idea'''
+def worktime(times, lunch_discount=False, lunch='1:00'):
+    '''
+    Goal and luch (amounts) are just an idea. Maybe make an optional parameter
+    such as use_lunch (bool) that verifies if we need to discount the lunch
+    time from total. Also, in this case, make sure we have both use_lunch and
+    lunch
+    '''
 
     assert len(times) % 2 == 0, f'Need an even amount of timestamps, got' \
         ' {len(times)}'
 
+    if lunch_discount:
+        assert lunch is not None, 'Lunch must be a time string in the format' \
+            'HH:mm'
+
     signals = [-1, 1] * len(times)
     total = 0
+
     for s, t in zip(signals, map(toSeconds, times)):
         total += s * t
+
+    if lunch_discount:
+        lunch_seconds = toSeconds(lunch)
+        if lunch_seconds > 0:
+            total -= lunch_seconds
+        else:
+            total += lunch_seconds
+
     return toHoursMinutes(total)
 
 
