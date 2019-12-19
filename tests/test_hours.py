@@ -1,14 +1,6 @@
 import pytest
-from collections import namedtuple
 
 from hours import timebank, toHoursMinutes, worktime
-
-Hours = namedtuple('Hours', [
-    'Acc',
-    'Extra',
-    'Delay',
-    'Miss'
-])
 
 
 @pytest.mark.parametrize('times, expected', [
@@ -43,23 +35,11 @@ def test_toHoursMinutes(time, expected):
     assert toHoursMinutes(time) == expected
 
 
-@pytest.mark.parametrize('times, expected', [
-    # December
-    (('0:00',), '0:00'),
-
-    (Hours(
-        Acc='0:00',
-        Extra='0:00',
-        Delay='-0:00',
-        Miss='-0:00',
-    ), '0:00')
+@pytest.mark.parametrize('times, lunch_discount, lunch, expected', [
+    (('7:15', '11:48', '12:46', '17:40'), False, None, '9:27'),
+    (('8:00', '17:00'), True, '1:00', '8:00'),
+    (('8:00', '18:00'), True, '2:00', '8:00'),
 ])
-def test_myTimebank(times, expected):
-    assert toHoursMinutes(timebank(tuple(times))) == expected
-
-
-@pytest.mark.parametrize('times, expected', [
-    (('7:15', '11:48', '12:46', '17:40'), '9:27'),  # 12/17/2019
-])
-def test_worktime(times, expected):
-    assert worktime(times) == expected
+def test_worktime(times, lunch_discount, lunch, expected):
+    assert worktime(times, lunch_discount=lunch_discount, lunch=lunch) \
+        == expected
